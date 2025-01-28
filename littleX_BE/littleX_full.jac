@@ -10,6 +10,17 @@ glob logger = logging.getLogger("littleX");
 glob llm = Ollama(host="http://127.0.0.1:11434", model_name="llama3.2:1b");
 glob model = SentenceTransformer('all-MiniLM-L6-v2');
 
+can 'Extract and summarize trending themes, major highlights, and key interactions from recent tweets in one concise sentence.'
+summarise_tweets(tweets: list[str]) -> 'Summarisation': str by llm();
+
+can search_tweets(query: str, tweets: list, tweet_embeddings: any, similarity_threshold: float=0.25) -> list {
+    query_embedding = model.encode([query]);
+    similarities = cosine_similarity(query_embedding, tweet_embeddings)[0];
+    results = [{**tweets[i], "similarity": similarities[i]} for i in range(len(similarities)) if similarities[i] >= similarity_threshold]
+    ;
+    return results;
+}
+
 node profile {
     has username: str = "";
     has count_tag: dict = {};
@@ -28,14 +39,14 @@ node profile {
 
     can follow with follow_request entry{
         self.followees.append(here.profile_id);
-        logger.info(f"New followee addded: {self.profile_id}");
+        logger.info(f"New followee addded: {here.profile_id}");
         self +:follow():+> &here.profile_id;
         report self;
     }
 
     can un_follow with un_follow_request entry{
         self.followees.append(here.profile_id);
-        logger.info(f"New followee addded: {self.profile_id}");
+        logger.info(f"New followee addded: {here.profile_id}");
         self del-:follow:-> &here.profile_id;
         report self;
     }
@@ -74,7 +85,7 @@ node tweet {
     can load with load_tweets entry{
         logger.info(f"Tweet loaded: {here}");  
         self.tweet_info = {
-            "contents":self.content,
+            "content":self.content,
             "likes": [i.username for i in [self -:like:->]], 
             "comments":[i.content for i in [self -->(`?comment)]]
             }; 
@@ -148,9 +159,7 @@ walker update_tweet { #spawn at tweet
     has updated_content: str;
 }
 
-walker remove_tweet { #spawn at tweet
-    has tweet_id: str;
-}
+walker remove_tweet { } #spawn at tweet
 
 walker like_tweet { #spawn profile
     has tweet_id: str;
@@ -202,7 +211,7 @@ walker load_feed  { #spawn at profile
             user_tweets = user_node spawn load_tweets();
             self.feeds.extend(user_tweets.tweets);
         }
-        tweets = [feed['tweet']['content'].content for feed in self.feeds];
+        tweets = [feed.get("content") for feed in self.feeds];
         self.summary: str = summarise_tweets(tweets);
 
         # Filter tweets based on search query
