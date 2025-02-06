@@ -61,6 +61,7 @@ document.getElementById("login-form").addEventListener("submit", async (e) => {
   }
 
   try {
+    // Step 1: Login
     const loginResponse = await fetch(`${BASE_URL}/login`, {
       method: "POST",
       headers: {
@@ -80,54 +81,67 @@ document.getElementById("login-form").addEventListener("submit", async (e) => {
     const token = loginData.token;
     localStorage.setItem("authToken", token);
 
-    alert("Login successful!");
+    // Step 2: Get Profile
+    try {
+      const profileResponse = await fetch(
+        `${Constants.API_URL}/walker/get_profile`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            accept: "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({}),
+        }
+      );
 
-    // Check user profile
-    const profileResponse = await fetch(
-      `${Constants.API_URL}/walker/get_profile`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          accept: "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
+      if (profileResponse.ok) {
+        const profileData = await profileResponse.json();
 
-    if (!profileResponse.ok) {
-      console.error("Failed to fetch user profile");
-    } else {
-      const profileData = await profileResponse.json();
-      const username = profileData.reports[0].context.username;
+        // Check if profile exists and has a username
+        if (profileData.reports && profileData.reports.length > 0) {
+          const username = profileData.reports[0].user.context?.username;
 
-      if (!username) {
-        const newUsername = prompt("Please enter a username:");
-        if (newUsername) {
-          const updateProfileResponse = await fetch(
-            `${Constants.API_URL}/walker/update_profile`,
-            {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-                accept: "application/json",
-                Authorization: `Bearer ${token}`,
-              },
-              body: JSON.stringify({ new_username: newUsername }),
+          if (!username) {
+            // Step 3: Prompt for username if not set
+            const newUsername = prompt("Please enter a username:");
+            if (newUsername) {
+              try {
+                const updateProfileResponse = await fetch(
+                  `${Constants.API_URL}/walker/update_profile`,
+                  {
+                    method: "POST",
+                    headers: {
+                      "Content-Type": "application/json",
+                      accept: "application/json",
+                      Authorization: `Bearer ${token}`,
+                    },
+                    body: JSON.stringify({ new_username: newUsername }),
+                  }
+                );
+
+                if (!updateProfileResponse.ok) {
+                  throw new Error("Failed to update username");
+                }
+              } catch (updateError) {
+                console.error("Error updating username:", updateError);
+                alert("Failed to update username. Please try again later.");
+                return;
+              }
             }
-          );
-
-          if (!updateProfileResponse.ok) {
-            console.error("Failed to update username");
-          } else {
-            console.log("Username updated successfully");
           }
         }
       }
+    } catch (profileError) {
+      console.error("Error fetching profile:", profileError);
+      alert("Error fetching profile. Please try again later.");
+      return;
     }
+
     window.location.href = "tweets.html";
-  } catch (error) {
-    console.error("Error during login or starting walker:", error);
-    alert("An error occurred. Please try again later.");
+  } catch (loginError) {
+    console.error("Error during login:", loginError);
+    alert("An error occurred during login. Please try again later.");
   }
 });

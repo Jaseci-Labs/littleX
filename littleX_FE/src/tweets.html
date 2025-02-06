@@ -144,49 +144,90 @@
     </main>
 
     <template id="tweet-template">
-      <div class="md-card md-tweet">
-        <div class="md-card-header">
-          <span class="material-icons">account_circle</span>
-          <span class="username"></span>
-        </div>
-        <div class="md-card-content content"></div>
-        <div class="md-card-actions">
-          <button class="md-button md-button-icon like-btn">
-            <span class="material-icons">favorite_border</span>
-            <span class="count"></span>
-          </button>
-          <button class="md-button md-button-icon comment-btn">
-            <span class="material-icons">chat_bubble_outline</span>
-            <span class="count"></span>
-          </button>
-        </div>
-        <div class="comments-section">
-          <div class="comments-container">
-            <div class="first-comment"></div>
-            <div class="remaining-comments" style="display: none"></div>
+      <div class="md-card tweet">
+        <div class="md-card-content">
+          <div
+            class="tweet-header"
+            style="display: flex; align-items: center; margin-bottom: 12px"
+          >
+            <span class="material-icons" style="margin-right: 8px; color: #666"
+              >account_circle</span
+            >
+            <span class="username" style="font-weight: 500"></span>
           </div>
-          <form class="comment-form md-text-field">
-            <input
-              type="text"
-              class="md-text-field-input"
-              placeholder="Post your reply"
-              required
-            />
-            <button type="submit" class="md-button md-button-contained">
-              Reply
-            </button>
-          </form>
+          <div class="content" style="margin: 0 0 16px 32px; color: #333"></div>
+          <div style="margin: 0 0 0 32px">
+            <div
+              class="actions"
+              style="padding-bottom: 12px; border-bottom: 1px solid #e0e0e0"
+            >
+              <button
+                class="md-button md-button-text like-btn"
+                style="padding: 4px 8px; min-width: auto"
+              >
+                <span class="material-icons" style="font-size: 20px"
+                  >favorite_border</span
+                >
+                <span
+                  class="count"
+                  style="margin-left: 4px; color: #666"
+                ></span>
+              </button>
+            </div>
+            <div class="comments-section" style="padding-top: 12px">
+              <div
+                class="comments-count"
+                style="color: #666; font-size: 14px; margin-bottom: 8px"
+              ></div>
+              <div class="comments-list"></div>
+              <button
+                class="md-button md-button-text see-more-comments"
+                style="display: none; color: #666; font-size: 14px"
+              ></button>
+              <form class="comment-form" style="margin-top: 12px">
+                <div class="md-text-field" style="width: 100%">
+                  <input
+                    type="text"
+                    class="md-text-field-input comment-input"
+                    placeholder="Write a comment..."
+                    style="
+                      padding: 8px 12px;
+                      border-radius: 20px;
+                      margin-bottom: 10px;
+                    "
+                  />
+                  <button
+                    type="submit"
+                    class="md-button md-button-contained"
+                    style="margin-left: 8px"
+                  >
+                    Reply
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
         </div>
       </div>
     </template>
 
     <template id="comment-template">
-      <div class="md-card-content comment">
-        <div class="comment-header">
-          <span class="material-icons">account_circle</span>
-          <span class="username"></span>
+      <div
+        class="comment"
+        style="display: flex; align-items: flex-start; margin: 8px 0"
+      >
+        <span
+          class="material-icons"
+          style="margin-right: 8px; font-size: 20px; color: #666"
+          >account_circle</span
+        >
+        <div style="flex: 1">
+          <span
+            class="username"
+            style="font-weight: 500; margin-right: 8px"
+          ></span>
+          <span class="content" style="color: #333"></span>
         </div>
-        <div class="content"></div>
       </div>
     </template>
 
@@ -200,7 +241,6 @@
       </div>
     </template>
     <script src="config.js"></script>
-    <script  src="tweets.js"></script>
-
+    <script src="tweets.js"></script>
   </body>
 </html>

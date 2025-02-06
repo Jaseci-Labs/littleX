@@ -9,6 +9,7 @@
   background: transparent;
   box-shadow: none;
   height: 100%;
+  padding: 10px;
 }
 
 #userTweets {
@@ -38,6 +39,69 @@
 
 .md-tweet .username {
   flex: 1;
+}
+
+.tweet-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.tweet-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.tweet-actions button {
+  display: inline-flex !important;
+  padding: 4px;
+  min-width: auto;
+  color: #666;
+}
+
+.tweet-actions .material-icons {
+  font-size: 20px;
+}
+
+.content {
+  margin: 0 0 16px 32px;
+  color: #333;
+}
+
+.edit-form {
+  margin: 0 0 16px 32px;
+}
+
+.edit-form .md-text-field {
+  width: 100%;
+}
+
+.edit-form textarea {
+  width: 100%;
+  min-height: 80px;
+  padding: 8px;
+  border-radius: 4px;
+}
+
+.actions {
+  margin-left: 32px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.like-btn {
+  padding: 4px 8px;
+  min-width: auto;
+}
+
+.like-btn .material-icons {
+  font-size: 20px;
+}
+
+.like-btn .count {
+  margin-left: 4px;
+  color: #666;
 }
 
 .delete-btn {
@@ -99,9 +163,8 @@
 }
 
 .comments-section {
-  margin-top: 12px;
+  margin-left: 32px;
   padding-top: 12px;
-  border-top: 1px solid rgba(0, 0, 0, 0.12);
 }
 
 .comment {
