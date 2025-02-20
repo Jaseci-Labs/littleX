@@ -44,8 +44,7 @@ cd littlex/littleX_BE
 ```bash
 pip install -r requirements.txt
 ```
-### 3. Set OpenAI API Key (Only for OpenAI Version)
-
+### 3. Set OpenAI API Key
 - For linux
    ```bash
    export OPENAI_API_KEY='your-open-api-key'

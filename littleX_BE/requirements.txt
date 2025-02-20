@@ -5,3 +5,4 @@ openai
 ollama
 pillow
 sentence_transformers
+openai~=1.63.2
