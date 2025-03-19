@@ -12,7 +12,7 @@ glob sentence_transformer = SentenceTransformer('all-MiniLM-L6-v2');
 can search_tweets(query: str, tweets: list, tweet_embeddings: any, similarity_threshold: float=0.25) -> list {
     query_embedding = sentence_transformer.encode([query]);
     similarities = cosine_similarity(query_embedding, tweet_embeddings)[0];
-    results = [{**{"Tweet_Info": tweets[i]}, "similarity": similarities[i]} for i in range(len(similarities)) if similarities[i] >= similarity_threshold];
+    results = [{**{"Tweet_Info": tweets[i]}, "similarity": similarities[i]} for i in range(len(tweets)) if similarities[i] >= similarity_threshold];
     results= sorted(results,key=(with x: int can x["similarity"]), reverse=True);
     return results;
 }
@@ -42,7 +42,7 @@ node Profile {
     can un_follow with un_follow_request entry {
         current_profile = [root-->(`?Profile)];
         follow_edge = :e:[current_profile[0] -:Follow:-> self];
-        Jac.destroy(follow_edge[0]);
+        del follow_edge[0];
         report self;
     }
 }
@@ -67,7 +67,7 @@ node Tweet {
     }
 
     can delete with remove_tweet exit {
-        Jac.destroy(self);
+        del self;
     }
 
     can like_tweet with like_tweet entry {
@@ -79,7 +79,7 @@ node Tweet {
     can remove_like with remove_like entry {
         current_profile = [root-->(`?Profile)];
         like_edge = :e:[self -:Like:-> current_profile[0]];
-        Jac.destroy(like_edge[0]);
+        del like_edge[0];
         report self;
     }
 
@@ -112,7 +112,7 @@ node Comment {
     }
 
     can delete with remove_comment entry {
-        Jac.destroy(self);
+        del self;
     }
 }
 
