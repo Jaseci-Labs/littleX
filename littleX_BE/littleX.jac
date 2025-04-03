@@ -40,7 +40,7 @@ node Profile {
 
     can un_follow with un_follow_request entry {
         current_profile = [root-->(`?Profile)];
-        follow_edge = :e:[current_profile[0] -:Follow:-> self];
+        follow_edge = [edge current_profile[0] -:Follow:-> self];
         Jac.destroy(follow_edge[0]);
         report self;
     }
@@ -77,7 +77,7 @@ node Tweet {
 
     can remove_like with remove_like entry {
         current_profile = [root-->(`?Profile)];
-        like_edge = :e:[self -:Like:-> current_profile[0]];
+        like_edge = [edge self -:Like:-> current_profile[0]];
         Jac.destroy(like_edge[0]);
         report self;
     }
